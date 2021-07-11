@@ -1,0 +1,4 @@
+hosts: ec2
+
+ - shell: echo "God is allmighty - Amen" > ~/sunday.txt
+ - shell: echo "God is allmighty - Amen" > ~/sunday.txt
