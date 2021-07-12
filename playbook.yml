@@ -1,4 +1,4 @@
-- hosts: ec2
+- hosts: sandbox
   tasks:
   - name: Install Git 
     become: yes    
@@ -6,7 +6,7 @@
     apt:
       name: git   
   
-  - name: Clone Repo
+  - name: Clone Repo from Si3mshady
     git:
       repo: 'https://github.com/si3mshady/interactive_map_react.git'
       dest: ~/interactive_map_react 
@@ -68,3 +68,4 @@
       chdir: /home/ubuntu/interactive_map_react/
 
 
+# https://www.linkedin.com/posts/activity-6818196232733900800-QkOO
