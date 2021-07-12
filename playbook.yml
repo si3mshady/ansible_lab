@@ -1,4 +1,70 @@
-hosts: ec2
+- hosts: ec2
+  tasks:
+  - name: Install Git 
+    become: yes    
+    become_user: root
+    apt:
+      name: git   
+  
+  - name: Clone Repo
+    git:
+      repo: 'https://github.com/si3mshady/interactive_map_react.git'
+      dest: ~/interactive_map_react 
+      clone: yes    
+      update: yes
+ 
+   
+  - name: Install aptitude using apt
+    become: yes    
+    become_user: root  
+    apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
 
- - shell: echo "God is allmighty - Amen" > ~/sunday.txt
- - shell: echo "God is allmighty - Amen" > ~/sunday.txt
+  - name: Install required system packages
+    become: yes    
+    become_user: root    
+    apt: name={{ item }} state=latest update_cache=yes
+    loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+  - name: Add Docker GPG apt Key
+    become: yes    
+    become_user: root  
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+  - name: Add Docker Repository
+    become: yes    
+    become_user: root  
+    apt_repository:
+      repo: deb https://download.docker.com/linux/ubuntu bionic stable
+      state: present
+
+  - name: Update apt and install docker-ce
+    become: yes    
+    become_user: root  
+    apt: update_cache=yes name=docker-ce state=latest
+
+  - name: Install Docker Module for Python
+    become: yes    
+    become_user: root  
+    pip:
+      name: docker
+
+  - name: Install Docker-Compose
+    become: yes    
+    become_user: root  
+    get_url: 
+      url : https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+      dest: /usr/local/bin/docker-compose
+      mode: 'u+x,g+x'
+
+  - name: Docker-Compose Up
+    become: yes    
+    become_user: root
+    shell:
+      cmd: docker-compose up -d ||  docker-compose down -v
+
+    args:
+      chdir: /home/ubuntu/interactive_map_react/
+
+
